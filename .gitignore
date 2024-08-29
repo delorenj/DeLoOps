@@ -1,3 +1,4 @@
 # .gitignore
 .DS_Store
 .git-commit-message-generator-config.json
+__pycache__
