@@ -3,3 +3,4 @@
 .git-commit-message-generator-config.json
 __pycache__
 .env
+ENV
