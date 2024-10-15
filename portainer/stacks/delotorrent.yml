@@ -1,0 +1,69 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - VPN_SERVICE_PROVIDER=custom
+      - OPENVPN_USER=${VPNAC_USER}
+      - OPENVPN_PASSWORD=${VPNAC_PASSWORD}
+      - OPENVPN_CUSTOM_CONFIG=/gluetun/netherlands.ovpn
+      - TZ=${TZ}
+    volumes:
+      - ./gluetun:/gluetun
+    ports:
+      - 8090:8090      # qBittorrent Web UI
+      - 8191:8191      # flaresolverr
+      - 9696:9696      # prowlarr
+      - 6881:6881      # Torrent TCP port
+      - 6881:6881/udp  # Torrent UDP port
+    restart: unless-stopped
+
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    depends_on:
+      - gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - WEBUI_PORT=8090
+    volumes:
+      - ./qbittorrent:/config
+      - /volume1/downloads:/downloads
+      - /volume1/video:/video
+      - /volume1/software:/software
+      - /volume1/Stuff:/Stuff
+    network_mode: "service:gluetun"
+    restart: unless-stopped
+
+  prowlarr:
+    image: linuxserver/prowlarr:latest
+    container_name: prowlarr
+    depends_on:
+      - gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ./prowlarr:/config
+    network_mode: "service:gluetun"
+    restart: unless-stopped
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    depends_on:
+      - gluetun
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - HEADLESS=true
+      - TZ=${TZ}
+    network_mode: "service:gluetun"
+    restart: unless-stopped
+
