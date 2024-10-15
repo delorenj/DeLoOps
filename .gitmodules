@@ -1,0 +1,3 @@
+[submodule "did-stuff"]
+	path = did-stuff
+	url = git@github.com:delorenj/did-stuff.git
