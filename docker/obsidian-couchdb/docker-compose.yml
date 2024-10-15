@@ -6,8 +6,13 @@ services:
     mem_limit: 2g
     network_mode: host
     volumes:
-      - .:/opt/couchdb/data:rw
+      - ./data:/opt/couchdb/data:rw
     environment:
-     COUCHDB_USER: delorenj
-     COUCHDB_PASSWORD: admin123
+     COUCHDB_USER: ${COUCHDB_USER}
+     COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
     restart: always
+
+networks:
+  default:
+    name: shared_network
+    external: true

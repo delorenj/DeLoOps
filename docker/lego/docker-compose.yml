@@ -3,7 +3,7 @@ services:
     image: goacme/lego
     environment:
       - NAMECHEAP_API_USER=${NAMECHEAP_API_USER}
-      - NAMECHEAP_API_KEY=${NAMECHEAP_API_PASS}
+      - NAMECHEAP_API_KEY=${NAMECHEAP_API_KEY}
     volumes:
       - ./lego:/root/.lego
     working_dir: /root
@@ -16,3 +16,8 @@ services:
       --accept-tos
       --path /root/.lego
       run
+
+networks:
+  default:
+    name: shared_network
+    external: true
