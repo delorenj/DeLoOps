@@ -1,0 +1,18 @@
+services:
+  couchdb:
+    image: couchdb
+    container_name: CouchDB
+    hostname: couchdb
+    mem_limit: 2g
+    network_mode: host
+    volumes:
+      - ./data:/opt/couchdb/data:rw
+    environment:
+     COUCHDB_USER: ${COUCHDB_USER}
+     COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
+    restart: always
+
+networks:
+  default:
+    name: shared_network
+    external: true

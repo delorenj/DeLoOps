@@ -1,0 +1,23 @@
+services:
+  lego:
+    image: goacme/lego
+    environment:
+      - NAMECHEAP_API_USER=${NAMECHEAP_API_USER}
+      - NAMECHEAP_API_KEY=${NAMECHEAP_API_KEY}
+    volumes:
+      - ./lego:/root/.lego
+    working_dir: /root
+    command: >
+      --email ${EMAIL}
+      --dns namecheap
+      --dns.resolvers 1.1.1.1
+      --domains "*.delorenzo.family"
+      --domains "delorenzo.family"
+      --accept-tos
+      --path /root/.lego
+      run
+
+networks:
+  default:
+    name: shared_network
+    external: true
